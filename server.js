@@ -1,6 +1,18 @@
 const express = require('express'); // essentially import express
+const mongoose = require('mongoose');
+
 
 const app = express();
+
+//DB config
+const db = require('./config/keys').mongoURI;   // getting the link to connect to db
+
+//Connect to Mongodb
+mongoose
+    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected'))    // .then is if it connects successfully it lets me know on the console
+    .catch(err => console.log(err))  // .catch catches errors so we know if we failed connection
+
 
 app.get('/', (req, res) => res.send('Hello chief'));  
 
