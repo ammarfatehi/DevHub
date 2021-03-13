@@ -1,6 +1,10 @@
 const express = require('express'); // essentially import express
 const mongoose = require('mongoose');
 
+// essentially importing our files/ telling it where to look
+const users = require('./routes/api/users'); 
+const profile = require('./routes/api/profile'); 
+const posts = require('./routes/api/posts'); 
 
 const app = express();
 
@@ -15,6 +19,11 @@ mongoose
 
 
 app.get('/', (req, res) => res.send('Hello chief'));  
+
+// Use Routes; pretty much setting where like websitename/api/users will go
+app.use('/api/users', users);
+app.use('/api/profile', profile);
+app.use('/api/posts', posts);
 
 const port = process.env.PORT || 5000;  // the first part of || is for horouke and the second is port 5000
 
