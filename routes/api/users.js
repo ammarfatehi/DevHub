@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();    // pretty much like request in python; handles our request to our app
 const gravatar = require('gravatar');   // importing gravatar library
-const bcrpt = require('bcryptjs');  // encrept the password
+const bcrypt = require('bcryptjs');  // encrept the password
 
 //load user model
 const User = require('../models/User');
@@ -45,8 +45,8 @@ router.post('/register', (req, res) =>{
                 }); 
                 
                 // encrpting the password 
-                bcrpt.genSalt(10, (err, salt) =>{
-                    bcrpt.hash(newUser.password, salt, (err, hash) => { // hash = encrpted password
+                bcrypt.genSalt(10, (err, salt) =>{
+                    bcrypt.hash(newUser.password, salt, (err, hash) => { // hash = encrpted password
                         if(err) throw err;
                         newUser.password = hash;
 
@@ -59,6 +59,40 @@ router.post('/register', (req, res) =>{
                 })
             }
         })
+});
+
+/*
+@route GET api/users/login
+@dscript login iUser / Returning the JWT Token
+@access Public
+*/
+router.post('/login', (req, res) =>{
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // Find the user by email
+    User.findOne({email})
+        .then(user => {
+
+            // Check to make sure user is in the DB
+            if(!user) {
+                return res.status(404).json({email: 'User email not found'});
+            }
+
+            // Check password 
+            // password right now just has the plain text password but in the DB the password is encrpted s=
+            // bcrypt has a compare function that checks this plain text vs the encrpted password
+            bcrypt.compare(password, user.password)
+                .then(isMatch => {
+                    if(isMatch) {
+                        res.json({msg: 'Success email and password match'});
+                    } else {
+                        return res.status(400).json({password: 'Password incorrect'});
+                    }
+                });
+
+
+        });
 });
 
 
