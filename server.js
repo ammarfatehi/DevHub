@@ -1,6 +1,7 @@
 const express = require('express'); // essentially import express
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 
 // essentially importing our files/ telling it where to look
 const users = require('./routes/api/users'); 
@@ -23,7 +24,11 @@ mongoose
     .catch(err => console.log(err))  // .catch catches errors so we know if we failed connection
 
 
-app.get('/', (req, res) => res.send('Hello chief'));  
+// Passport middleware
+app.use(passport.initialize());
+
+// Passport Config pretty much your aunthentication strategy for this app its jwt
+require('./config/passport')(passport);
 
 // Use Routes; pretty much setting where like websitename/api/users will go
 app.use('/api/users', users);

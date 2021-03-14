@@ -6,6 +6,7 @@ const gravatar = require('gravatar');   // importing gravatar library
 const bcrypt = require('bcryptjs');  // encrept the password
 const jwt = require('jsonwebtoken');    // secure way to transfer data
 const keys = require('../../config/keys');
+const passport = require('passport');
 
 //load user model
 const User = require('../models/User');
@@ -88,11 +89,11 @@ router.post('/login', (req, res) =>{
                 .then(isMatch => {
                     if(isMatch) {
                         //User Matched
-                        
                         const payload = {id: user.id, name: user.name, avatar: user.avatar} // creating jwt payload
 
                         //Sign Token
-                        jwt.sign(
+                        // (data,key, object: {expiration time in secs}, call back)
+                        jwt.sign(   
                             payload, 
                             keys.secretOrKey, 
                             {expiresIn: 3600},
@@ -101,8 +102,7 @@ router.post('/login', (req, res) =>{
                                     success: true,
                                     token: 'Bearer ' + token
                                 });
-
-                        });    // (data,key, object: {expiration time in secs}, call back)
+                        });    
                         
                     } else {
                         return res.status(400).json({password: 'Password incorrect'});
@@ -111,6 +111,19 @@ router.post('/login', (req, res) =>{
         });
 });
 
+/*
+@route GET api/users/current
+@dscript Returns current user/ whoever the token belongs to
+@access Private (needs proper token)
+*/
+router.get('/current', passport.authenticate('jwt', {session: false}), 
+(req, res) => {
+    res.json({
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email
+    });
+});
 
 // you have to export the router for the server.js file to pick it up
 module.exports = router;
