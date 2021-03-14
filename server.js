@@ -1,5 +1,6 @@
 const express = require('express'); // essentially import express
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 // essentially importing our files/ telling it where to look
 const users = require('./routes/api/users'); 
@@ -7,6 +8,10 @@ const profile = require('./routes/api/profile');
 const posts = require('./routes/api/posts'); 
 
 const app = express();
+
+//Body parser middleware
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 //DB config
 const db = require('./config/keys').mongoURI;   // getting the link to connect to db
