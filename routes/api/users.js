@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();    // pretty much like request in python; handles our request to our app
 const gravatar = require('gravatar');   // importing gravatar library
 const bcrypt = require('bcryptjs');  // encrept the password
+const jwt = require('jsonwebtoken');    // secure way to transfer data
+const keys = require('../../config/keys');
 
 //load user model
 const User = require('../models/User');
@@ -85,13 +87,27 @@ router.post('/login', (req, res) =>{
             bcrypt.compare(password, user.password)
                 .then(isMatch => {
                     if(isMatch) {
-                        res.json({msg: 'Success email and password match'});
+                        //User Matched
+                        
+                        const payload = {id: user.id, name: user.name, avatar: user.avatar} // creating jwt payload
+
+                        //Sign Token
+                        jwt.sign(
+                            payload, 
+                            keys.secretOrKey, 
+                            {expiresIn: 3600},
+                            (err, token) => {
+                                res.json({
+                                    success: true,
+                                    token: 'Bearer ' + token
+                                });
+
+                        });    // (data,key, object: {expiration time in secs}, call back)
+                        
                     } else {
                         return res.status(400).json({password: 'Password incorrect'});
                     }
                 });
-
-
         });
 });
 
