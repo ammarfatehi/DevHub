@@ -1,0 +1,9 @@
+// a function to check if any type of object is empty
+
+const isEmpty = value => 
+        value === undefined || value ===  null || (typeof value === 'object' && Object.keys(value).length === 0) ||
+        (typeof value === 'string' && value.trim().legnth === 0);
+    
+module.exports = isEmpty;
+
+
