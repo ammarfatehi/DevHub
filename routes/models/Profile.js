@@ -7,7 +7,7 @@ const ProfileSchema = new Schema({
         type: Schema.Types.ObjectId,    // associates the user by their id
         ref: 'users'    // referencing the user schema
     },
-    handle: {
+    handle: {   // handle = like username or ur @
         type: String,
         required: true,
         max: 40
@@ -39,11 +39,11 @@ const ProfileSchema = new Schema({
         {
             title: {
                 type: String,
-                required = true
+                required: true
             },
             company: {
                 type: String,
-                required = true
+                required: true
             },
             location: {
                 type: String
@@ -68,11 +68,11 @@ const ProfileSchema = new Schema({
         {
             school: {
                 type: String,
-                required = true
+                required: true
             },
             degree: {
                 type: String,
-                required = true
+                required: true
             },
             fieldofstudy: {
                 type: String,
