@@ -19,7 +19,7 @@ const db = require('./config/keys').mongoURI;   // getting the link to connect t
 
 //Connect to Mongodb
 mongoose
-    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true.valueOf, 'useFindAndModify': false })
     .then(() => console.log('MongoDB connected'))    // .then is if it connects successfully it lets me know on the console
     .catch(err => console.log(err))  // .catch catches errors so we know if we failed connection
 

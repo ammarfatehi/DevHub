@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const ProfileSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,    // associates the user by their id
-        ref: 'users'    // referencing the user schema
+        ref: 'user'    // referencing the user schema
     },
     handle: {   // handle = like username or ur @
         type: String,
@@ -94,7 +94,7 @@ const ProfileSchema = new Schema({
             }
         }        
     ],
-    scoial: {
+    social: {
         youtube: {
             type: String
         },

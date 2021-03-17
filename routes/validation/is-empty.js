@@ -1,4 +1,5 @@
-// a function to check if any type of object is empty
+// a function to check if any type of object is empty 
+// gotta use this since validator.isEmpty only takes in strings
 
 const isEmpty = value => 
         value === undefined || value ===  null || (typeof value === 'object' && Object.keys(value).length === 0) ||
