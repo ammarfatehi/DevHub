@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 //Creating the Post Schema
 const PostSchema = new Schema({
     user: {
-        type: Schema.Type.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'users'
     },
     text: {
@@ -20,7 +20,7 @@ const PostSchema = new Schema({
     likes: [    // keep track of which users have liked a post so no one can like more than once
         {
             user: {
-                type: Schema.Type.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'users'
             }
         }
@@ -28,7 +28,7 @@ const PostSchema = new Schema({
     comments: [
         {
             user: {
-                type: Schema.Type.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'users'
             },
             text: {
