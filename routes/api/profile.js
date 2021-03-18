@@ -7,6 +7,8 @@ const passport = require('passport');
 
 // Load Validation
 const validateProfileInput =require('../validation/profile');
+const validateExperienceInput =require('../validation/experience');
+const validateEducationInput =require('../validation/education');
 
 // Load Profile Model
 const Profile = require('../models/Profile');
@@ -182,5 +184,76 @@ router.get('/user/:user_id', (req, res) => {
         .catch(err => res.status(404).json({profile: 'There is no profile for this user_id'}));
 } );
 
+/*
+@route POST api/profile/experience
+@dscript Add experience to profile
+@access Private
+*/
+router.post('/experience', passport.authenticate('jwt', {session: false}), (req,res) => {
+
+    // Setting up the errors
+    const {errors, isValid} = validateExperienceInput(req.body);
+
+    // Check Validation
+    if(!isValid) {
+        // return any errors with 400 Status
+        return res.status(400).json(errors);
+    }
+
+    Profile.findOne({user: req.user.id})
+    .then(profile => {
+        const newExp = {
+            title: req.body.title,
+            company: req.body.company,
+            location: req.body.location,
+            from: req.body.from,
+            to: req.body.to,
+            current: req.body.current,
+            description: req.body.description
+        }
+
+        // Add to the experience array for this users profile model
+        profile.experience.unshift(newExp); // adding the new experience to the beginning of the array
+
+        // Save profile
+        profile.save().then( profile => res.json(profile));
+    })
+});
+
+/*
+@route POST api/profile/education
+@dscript Add education to profile
+@access Private
+*/
+router.post('/education', passport.authenticate('jwt', {session: false}), (req,res) => {
+
+    // Setting up the errors
+    const {errors, isValid} = validateEducationInput(req.body);
+
+    // Check Validation
+    if(!isValid) {
+        // return any errors with 400 Status
+        return res.status(400).json(errors);
+    }
+
+    Profile.findOne({user: req.user.id})
+    .then(profile => {
+        const newEdu = {
+            school: req.body.school,
+            degree: req.body.degree,
+            fieldofstudy: req.body.fieldofstudy,
+            from: req.body.from,
+            to: req.body.to,
+            current: req.body.current,
+            description: req.body.description
+        }
+
+        // Add to the experience array for this users profile model
+        profile.education.unshift(newEdu); // adding the new experience to the beginning of the array
+
+        // Save profile
+        profile.save().then( profile => res.json(profile));
+    })
+});
 // you have to export the router for the server.js file to pick it up
 module.exports = router;
