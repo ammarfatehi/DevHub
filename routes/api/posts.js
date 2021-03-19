@@ -92,5 +92,64 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
         });
 });
 
+/*
+@route POST api/posts/like/:id
+@dscript Like a post
+@access Private
+*/
+router.post('/like/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            Post.findById(req.params.id)
+                .then( post => {
+                    // check if current user has already liked this post
+                    // loop/filter through the current likes and check if any of the users === current user                    
+                    if(post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+                        return res.status(400).json({alreadyliked: 'User already liked this post'});
+                    }
+
+                    // Like the post by adding the user id to the likes array
+                    post.likes.unshift({user: req.user.id});
+
+                    // Save
+                    post.save().then(post => res.json(post));
+
+                })
+                .catch(err => res.status(404).json({postnotfound: 'Post not found'}));
+        });
+});
+
+/*
+@route POST api/posts/unlike/:id
+@dscript Unlike a post
+@access Private
+*/
+router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            Post.findById(req.params.id)
+                .then( post => {
+                    // check if current user has liked this post
+                    // loop/filter through the current likes and check if any of the users === current user                    
+                    if(post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
+                        return res.status(400).json({notliked: 'User has not liked this post'});
+                    }
+
+                    // unLike the post by getting remove index
+                    const removeIndex = post.likes
+                        .map(item => item.user.toString())
+                        .indexOf(req.user.id);
+
+                    // Splice out of array
+                    post.likes.splice(removeIndex, 1);
+
+                    // Save
+                    post.save().then(post => res.json(post));
+
+                })
+                .catch(err => res.status(404).json({postnotfound: 'Post not found'}));
+        });
+});
+
 // you have to export the router for the server.js file to pick it up
 module.exports = router;
