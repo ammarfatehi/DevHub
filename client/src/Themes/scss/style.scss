@@ -1,5 +1,6 @@
 @import 'config';
 @import 'utilities';
+@import 'form';
 
 * {
     box-sizing: border-box;
@@ -17,7 +18,7 @@ body {
 
 a {
     text-decoration: none;
-    color: $primary-color;
+    color: $primary-color;    
 }
 
 ul {
