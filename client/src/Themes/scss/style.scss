@@ -175,3 +175,28 @@ img {
         }
     }
 }
+
+// Post Page
+.post-form-header {
+    padding: 0.5rem;
+}
+
+.post {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-gap: 2rem;
+    align-items: center;
+
+    // only affects the first div in post class
+    & > div:first-child {
+        text-align: center;
+    }
+
+    // making it so the image stays one size
+    img {
+        width: 150px;
+    }
+}
+
+
+@import 'mobile';
